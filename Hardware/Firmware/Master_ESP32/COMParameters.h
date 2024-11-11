@@ -1,3 +1,14 @@
+#ifndef COMParameters_h_
+#define COMParameters_h_
+
+typedef struct{
+  float x;
+  float y;
+  float theta;
+  float velocity_linear;
+  float omega;
+}_ODOM;
+
 typedef union{
   byte B[32];
   struct{
@@ -5,7 +16,7 @@ typedef union{
       float y;                // m/s
       float w;                // rad/s
       uint16_t CtrlWord1;     // [b0]Enable, [b1]Home,
-      uint16_t CtrlWord2; 
+      uint16_t CtrlWord2;     // [b0]ResetPosition,
       uint32_t SetPoint;      // ticks
       uint8_t GPIO_Config;       
       uint8_t GPIO_Value;       
@@ -18,7 +29,7 @@ typedef union{
 }_RAW_IN;
 
 typedef union{
-  byte B[44];
+  byte B[80];
   struct{
       uint16_t StatusWord1;     // [b0]L_SW, [b1]H_SW,
       uint16_t StatusWord2; 
@@ -42,6 +53,11 @@ typedef union{
       uint16_t AN_2;       
       uint16_t AN_3;
       uint16_t Sonar;
+      int32_t EncoderValue_0;          // ticks
+      int32_t EncoderValue_1;          // ticks
+      int32_t EncoderValue_2;          // ticks
+      uint32_t InstantTime;            // milliseconds from robot startup
+      _ODOM Odometry;
   } OUTPUT_DATA;
 }_RAW_OUT;
 
@@ -53,6 +69,16 @@ typedef union{
       float w;                // rad/s
   } INPUT_DATA;
 }_SLAVE1_IN;
+
+typedef union{
+  byte B[16];
+  struct{
+      int32_t EncoderValue_0;          // ticks
+      int32_t EncoderValue_1;          // ticks
+      int32_t EncoderValue_2;          // ticks
+      uint32_t InstantTime;            // milliseconds from robot startup 
+  } OUTPUT_DATA;
+}_SLAVE1_OUT;
 
 typedef union{
   byte B[8];
@@ -110,3 +136,5 @@ typedef union{
       uint16_t Sonar;     
   } OUTPUT_DATA;
 }_SLAVE2_OUT;
+
+#endif

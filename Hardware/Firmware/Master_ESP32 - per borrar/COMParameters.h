@@ -18,7 +18,7 @@ typedef union{
 }_RAW_IN;
 
 typedef union{
-  byte B[60];
+  byte B[44];
   struct{
       uint16_t StatusWord1;     // [b0]L_SW, [b1]H_SW,
       uint16_t StatusWord2; 
@@ -42,10 +42,6 @@ typedef union{
       uint16_t AN_2;       
       uint16_t AN_3;
       uint16_t Sonar;
-      int32_t EncoderValue_0;          // ticks
-      int32_t EncoderValue_1;          // ticks
-      int32_t EncoderValue_2;          // ticks
-      uint32_t InstantTime;            // milliseconds from robot startup 
   } OUTPUT_DATA;
 }_RAW_OUT;
 

@@ -60,6 +60,7 @@
 int eeAddress = 0;
 int SALVE_1_ADDR = 9;
 _SLAVE1_IN  Slave_1_IN;
+_SLAVE1_OUT  Slave_1_OUT;
 
 // Change these two numbers to the pins connected to your encoder.
 //   Best Performance: both pins have interrupt capability
@@ -104,7 +105,8 @@ unsigned long TempsOld_TimeOut=0;
 void setup() {
   Wire.setClock( 400000L);
   Wire.begin(SALVE_1_ADDR);
-  Wire.onReceive(receiveEvent); 
+  Wire.onRequest(RequestEven); // registrar evento de solicitud de datos
+  Wire.onReceive(receiveEvent); // registrar evento de recepcion de datos
   Serial.begin(115200);
   // Yo uso Motor con reductora 70:1 con encoder de Pololu 4754 (https://www.pololu.com/product/4754)
   // codificador 64 tics por revolución
@@ -157,16 +159,6 @@ void setup() {
 
 }
 
-void receiveEvent(int howMany)
-{
-  int n = 0;
-  while (Wire.available()) { // slave may send less than requested
-    Slave_1_IN.B[n] = Wire.read();    // receive a byte as character
-    n++;
-  }
-  DataReceived = true;     // nova línea.
-}
-
 
 void loop() {
 
@@ -197,4 +189,31 @@ void loop() {
   motor1.tick(myEnc1.read());
   motor2.tick(myEnc2.read());
   motor3.tick(myEnc3.read());
+}
+
+//***************** F U N C T I O N S *****************
+
+// Función requerida al recibir datos por I2C
+
+void receiveEvent(int howMany)
+{
+  int n = 0;
+  while (Wire.available()) { // slave may send less than requested
+    Slave_1_IN.B[n] = Wire.read();    // receive a byte as character
+    n++;
+  }
+  DataReceived = true;     // nova línea.
+}
+
+// Función a ejecutar cuando Maestro solicita datos
+void RequestEven() {
+  
+  Slave_1_OUT.OUTPUT_DATA.EncoderValue_0 = myEnc1.read();
+  Slave_1_OUT.OUTPUT_DATA.EncoderValue_1 = myEnc2.read();
+  Slave_1_OUT.OUTPUT_DATA.EncoderValue_2 = myEnc3.read();
+  Slave_1_OUT.OUTPUT_DATA.InstantTime = millis();
+
+  for (int i = 0; i < sizeof(Slave_1_OUT); i++) {
+    Wire.write(Slave_1_OUT.B[i]);
+  }
 }

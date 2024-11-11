@@ -10,7 +10,7 @@
  */
  
 /* Set these to your desired credentials. */
-const char *ssid = "MINAIRO_03";
+const char *ssid = "MINAIRO_02";
 const char *password = "12345678";
 
 /* Put IP Address details */

@@ -1,3 +1,14 @@
+#ifndef COMParameters_h_
+#define COMParameters_h_
+
+typedef struct{
+  float x;
+  float y;
+  float theta;
+  float velocity_linear;
+  float omega;
+}_ODOM;
+
 typedef union{
   byte B[32];
   struct{
@@ -18,7 +29,7 @@ typedef union{
 }_RAW_IN;
 
 typedef union{
-  byte B[60];
+  byte B[80];
   struct{
       uint16_t StatusWord1;     // [b0]L_SW, [b1]H_SW,
       uint16_t StatusWord2; 
@@ -45,7 +56,8 @@ typedef union{
       int32_t EncoderValue_0;          // ticks
       int32_t EncoderValue_1;          // ticks
       int32_t EncoderValue_2;          // ticks
-      uint32_t InstantTime;            // milliseconds from robot startup 
+      uint32_t InstantTime;            // milliseconds from robot startup
+      _ODOM Odometry;
   } OUTPUT_DATA;
 }_RAW_OUT;
 
@@ -124,3 +136,5 @@ typedef union{
       uint16_t Sonar;     
   } OUTPUT_DATA;
 }_SLAVE2_OUT;
+
+#endif
